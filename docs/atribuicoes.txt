@@ -1,0 +1,3 @@
+Partes e seus respectivos responsaveis:
+
+Luiz - Carregar uma gramática regular em BNF de um arquivo de texto. Converter a gramática regular em BNF para AFD. 
