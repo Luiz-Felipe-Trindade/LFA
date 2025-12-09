@@ -1,2 +1,3 @@
-S ::= a A | b | ε
-A ::= a S | c
+S ::= aA | b | ε
+A ::= aS | c | F
+F ::= bF | b 

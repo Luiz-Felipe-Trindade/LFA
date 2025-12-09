@@ -1,3 +1,4 @@
+# Função para leitura do arquivo de entrada
 def file_reader(file_name):
     
     try:
@@ -6,8 +7,11 @@ def file_reader(file_name):
         print(f'Erro ao construir o caminho do arquivo: {e}')
         return []
     
-    with open(caminho, 'r', encoding='utf-8') as file:
-       linhas = file.readlines()
-       print(f'Linhas lidas do arquivo {file_name}: {linhas}')
+    try:
+        with open(caminho, 'r', encoding='utf-8') as file:
+            linhas = file.readlines()
+    except FileNotFoundError:
+        print(f'Arquivo não encontrado: {caminho}')
+        return []
        
     return [linha.strip() for linha in linhas] 
