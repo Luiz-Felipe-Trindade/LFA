@@ -10,6 +10,18 @@ gramatica_texto= """
 <C> ::= b<D>
 <D> ::= a<D> | b<D> | ε
 """
+print("Digite a gramática em BNF (use ε para epsilon, '::=' para produções e '|' para alternativas). Termine com uma linha vazia:")
+lines = []
+while True:
+    try:
+        line = input()
+    except EOFError:
+        break
+    if line.strip() == "":
+        break
+    lines.append(line)
+gramatica_texto = "\n".join(lines)
+
 
 # Pega o arquivo de gramática
 #FILE_PATH = 'src\inputs\exemplo1.txt'
@@ -202,4 +214,4 @@ for linha in tabela_dados:
 print("\n--- CÓDIGO DO GRÁFICO (Copie o texto abaixo) ---")
 # Em vez de dot.render, usamos print(dot.source) para evitar o erro do executável
 print(dot.source)
-Source(dot.source) # Isso exibirá o gráfico diretamente no Jupyter Notebook ou ambiente compatível
+# Source(dot.source) # Isso exibirá o gráfico diretamente no Jupyter Notebook ou ambiente compatível
