@@ -1,0 +1,8 @@
+# Para rodar o código nós possibilitamos dois métodos, o tradicional
+# baixando todas as dependencias e rodando localmente, ou utilizando
+# o Colab do Google, que já possui todas as dependencias instaladas.
+
+## Recomendamos utilizar o Colab pois é nele que todas as funcionalidades
+## vão rodar corretamente, para isso siga os passos abaixo:
+# 1. Acesse o link abaixo com Ctrl + clique: 
+# 
