@@ -68,10 +68,15 @@ print(transitions)
 # Inicializa estruturas para o autômato determinístico (AFD): 
 #transições, estado inicial, lista de estados, estados finais, fila de processamento e estados já processados.
 afd_transitions = {}
+# Estado inicial do AFD é o conjunto contendo apenas o estado inicial do AFN
 afd_initial = frozenset([initial_state])
+# Lista de estados do AFD começa com o estado inicial
 afd_states = [afd_initial]
+# Conjunto de estados finais do AFD
 afd_final_states = set()
+# Fila para processar os conjuntos de estados
 queue = [afd_initial]
+# Conjunto para rastrear os estados já processados
 processed = set()
 
 # Processa cada conjunto de estados na fila até que a fila esteja vazia.
@@ -113,49 +118,74 @@ while queue:
 
 # 4. Preparar Tabela (DataFrame)
 tabela_dados = []
+# Mapeia conjuntos de estados para nomes legíveis (q0, q1, q2, ...)
 nome_estados = {tuple(sorted(list(s))): f"q{i}" for i, s in enumerate(afd_states)}
 
+# Preenche a tabela de dados
 for estado_set in afd_states:
+    # Converte o conjunto de estados para uma tupla ordenada
     estado_tuple = tuple(sorted(list(estado_set)))
+    # Obtém o nome legível do estado
     nome = nome_estados[estado_tuple]
     
     # Marcadores
     tipo = []
+    # Marca se é estado inicial 
     if estado_tuple == tuple(sorted(list(afd_initial))): tipo.append("INICIAL")
+    # Marca se é estado final
     if estado_tuple in afd_final_states: tipo.append("FINAL")
+    # Concatena os marcadores ou usa '-' se nenhum
     tipo_str = " / ".join(tipo) if tipo else "-"
     
+    # Cria a linha da tabela com estado, composição original e tipo
     linha = {'Estado': nome, 'Composição Original': str(estado_tuple), 'Tipo': tipo_str}
     
+    # Adiciona as transições para cada símbolo de entrada
     for simbolo in sorted(list(input_symbols)):
+        # Obtém o estado de destino para o símbolo atual 
         destino = afd_transitions.get(estado_tuple, {}).get(simbolo)
+        # Obtém o nome legível do estado de destino ou '-' se não houver transição
         linha[simbolo] = nome_estados.get(destino, "-") if destino else "-"
     
+    # Adiciona a linha à tabela de dados
     tabela_dados.append(linha)
 
+# Cria o DataFrame a partir da tabela de dados
 df_resultado = pd.DataFrame(tabela_dados)
 
 # 5. Gerar Gráfico (Graphviz)
 dot = graphviz.Digraph(comment='AFD Resultante')
+# Configuração do gráfico quando horizontal (da esquerda para a direita)
 dot.attr(rankdir='LR')
 
+# realiza os nós
 for estado_set in afd_states:
+    # Converte o conjunto de estados para uma tupla ordenada
     estado_tuple = tuple(sorted(list(estado_set)))
+    # Obtém o nome legível do estado
     nome = nome_estados[estado_tuple]
     
-    # Estilo dos nós
+    # Estilo dos nós (de acordo se é estado final ou não)
     shape = 'doublecircle' if estado_tuple in afd_final_states else 'circle'
+    # Marca o estado inicial com uma seta apontando para ele
     if estado_tuple == tuple(sorted(list(afd_initial))):
+        # Nó invisível para a seta inicial
         dot.node('start', '', shape='none')
+        # Aresta da seta inicial para o estado inicial
         dot.edge('start', nome)
     
+    # Adiciona o nó ao gráfico com o formato apropriado
     dot.node(nome, nome, shape=shape)
 
-# Arestas
+# Arestas do gráfico
 for origem_tuple, trans in afd_transitions.items():
+    # Obtém o nome legível do estado de origem
     origem_nome = nome_estados[origem_tuple]
+    # Para cada transição do estado de origem
     for simbolo, destino_tuple in trans.items():
+        # Obtém o nome legível do estado de destino
         destino_nome = nome_estados[destino_tuple]
+        # Adiciona a aresta ao gráfico com o símbolo como rótulo
         dot.edge(origem_nome, destino_nome, label=simbolo)
 
 # Exibindo resultados
